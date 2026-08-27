@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BenchStart - World Career</title>
+    <style>
+        :root {
+            --accent-color: #27ae60;
+            --accent-hover: #219653;
+        }
+
+        body {
+            background-color: #12181f;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        h1, h2 {
+            color: var(--accent-color);
+        }
+
+        .card {
+            background-color: #1e2631;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px auto;
+            max-width: 350px;
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: none;
+            background-color: #2c3e50;
+            color: white;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button, .btn-style {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        button:active {
+            background-color: var(--accent-hover);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            max-width: 350px;
+            margin: 0 auto 10px auto;
+        }
+
+        .icon-btn {
+            background: #1e2631;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            width: auto;
+            margin: 0;
+        }
+
+        .author-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #2c3e50;
+            text-decoration: none;
+            color: white;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 15px;
+            max-width: 350px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+
+        .author-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .offer-card {
+            background-color: #1e2631;
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px auto;
+            max-width: 350px;
+            text-align: left;
+        }
+
+        .club-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .club-logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            background: white;
+            border-radius: 50%;
+            padding: 3px;
+        }
+
+        .signature-box {
+            background-color: #2c3e50;
+            border: 2px dashed var(--accent-color);
+            height: 55px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            font-style: italic;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .color-picker-box {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+
+        .color-dot {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+        }
+
+        .match-field {
+            background-color: #27ae60;
+            border: 3px solid white;
+            border-radius: 10px;
+            height: 130px;
+            margin: 15px 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .table-box {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            margin-top: 10px;
+            max-height: 300px;
+            display: block;
+            overflow-y: auto;
+        }
+
+        .table-box th, .table-box td {
+            border: 1px solid #2c3e50;
+            padding: 4px;
+            text-align: center;
+        }
+
+        .table-box th {
+            background-color: #2c3e50;
+            color: #f1c40f;
+            position: sticky;
+            top: 0;
+        }
+
+        .national-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .trophy-item {
+            background: #2c3e50;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .directions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="menu-screen" class="screen active">
+        <div class="top-bar">
+            <button class="icon-btn" onclick="showScreen('trophy-screen')">🏆 Трофеи</button>
+            <button class="icon-btn" onclick="showScreen('settings-screen')">⚙️ Настройки</button>
+        </div>
+        <h1 style="margin-top: 10px;">CareerPitch</h1>
+        <p id="t-subtitle">Глобальная карьера футболиста: матчи с интерактивными атаками и защитой.</p>
+        
+        <div class="card" onclick="showScreen('creation-screen')">
+            <h3 id="t-new-career" style="margin-top: 0; color: var(--accent-color);">➕ НОВАЯ КАРИЬЕРА</h3>
+            <p id="t-new-desc" style="font-size: 14px; color: #aaa; margin-bottom: 0;">Создай игрока со всего мира</p>
+        </div>
+
+        <button onclick="loadCareer()" style="background-color: #3498db; max-width: 350px; margin: 10px auto;">📂 Загрузить карьеру</button>
+
+        <a href="https://www.tiktok.com/@justgoatfut?_r=1&_t=ZT-99ETe1BXXQs" target="_blank" class="author-btn">
+            <img src="1000132536.jpg" class="author-avatar" alt="Author">
+            <span>Поддержать автора (TikTok)</span>
+        </a>
+    </div>
+
+    <div id="settings-screen" class="screen">
+        <h2>Настройки</h2>
+        <div class="card" style="cursor: default;">
+            <label>Цвет темы:</label>
+            <div class="color-picker-box">
+                <div class="color-dot" style="background: #27ae60;" onclick="setTheme('#27ae60', '#219653')"></div>
+                <div class="color-dot" style="background: #e74c3c;" onclick="setTheme('#e74c3c', '#c0392b')"></div>
+                <div class="color-dot" style="background: #e67e22;" onclick="setTheme('#e67e22', '#d35400')"></div>
+                <div class="color-dot" style="background: #3498db;" onclick="setTheme('#3498db', '#2980b9')"></div>
+            </div>
+
+            <label style="margin-top: 20px; display: block;">Язык / Language:</label>
+            <select id="lang-select" onchange="changeLanguage()">
+                <option value="ru">Русский</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+        <button onclick="showScreen('menu-screen')">Назад в меню</button>
+    </div>
+
+    <div id="trophy-screen" class="screen">
+        <h2>Комната трофеев 🏆</h2>
+        <div class="card" style="cursor: default;" id="trophy-container">
+            <p style="color: #888; text-align: center; margin: 10px 0;">Пока нет трофеев. Выигрывай лиги и еврокубки!</p>
+        </div>
+        <button onclick="showScreen('menu-screen')">Назад</button>
+    </div>
+
+    <div id="creation-screen" class="screen">
+        <h2>Создание футболиста</h2>
+        <div class="card" style="cursor: default;">
+            <label>Имя игрока:</label>
+            <input type="text" id="p-name" value="Marcus">
+
+            <label>Национальность:</label>
+            <select id="p-country">
+                <option value="Россия">🇷🇺 Россия</option>
+                <option value="Украина">🇺🇦 Украина</option>
+                <option value="Беларусь">🇧🇾 Беларусь</option>
+                <option value="Казахстан">🇰🇿 Казахстан</option>
+                <option value="Франция">🇫🇷 Франция</option>
+                <option value="Испания">🇪🇸 Испания</option>
+                <option value="Германия">🇩🇪 Германия</option>
+                <option value="Англия">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Англия</option>
+                <option value="Италия">🇮🇹 Италия</option>
+                <option value="Аргентина">🇦🇷 Аргентина</option>
+                <option value="Бразилия">🇧🇷 Бразилия</option>
+                <option value="Япония">🇯🇵 Япония</option>
+            </select>
+
+            <label>Позиция:</label>
+            <select id="p-pos">
+                <option value="Форвард">Форвард</option>
+                <option value="Вингер">Вингер</option>
+                <option value="Плеймейкер">Атакующий полузащитник</option>
+                <option value="Опорник">Опорный полузащитник</option>
+                <option value="ЦЗ">Центральный защитник</option>
+                <option value="Фулбек">Крайний защитник</option>
+                <option value="Вратарь">Вратарь</option>
+            </select>
+        </div>
+        <button onclick="goToOffers()">Получить предложения</button>
+    </div>
+
+    <div id="offers-screen" class="screen">
+        <h2>Предложения клубов</h2>
+        <p style="font-size: 13px; color: var(--accent-color);">Случайные предложения на выбор:</p>
+        <div id="offers-container"></div>
+    </div>
+
+    <div id="hub-screen" class="screen">
+        <div id="national-team-banner" style="display: none;" class="national-badge">🌟 Вызван в сборную страны!</div>
+        <h2 id="hub-club-title">Карьера</h2>
+        <div class="card" style="cursor: default;">
+            <p>📅 Сезон: <span id="h-season" style="color: var(--accent-color);">1</span> | Тур: <span id="h-day">1</span>/34</p>
+            <p>👤 Имя: <span id="h-name"></span></p>
+            <p>🏟️ Клуб: <span id="h-club"></span></p>
+            <p>⭐ Рейтинг: <span id="h-rating">65</span></p>
+            <p>🏆 Еврокубок: <span id="h-euro" style="color: #f1c40f;">Нет</span></p>
+        </div>
+        <button onclick="showScreen('table-screen')">📊 Таблица лиги</button>
+        <button onclick="showScreen('trophy-screen')" style="background-color: #f39c12;">🏆 Комната трофеев</button>
+        <button id="euro-btn" style="display:none; background-color: #8e44ad;" onclick="startEuroMatch()">🇪🇺 Матч Еврокубка</button>
+        <button id="nat-btn" style="display:none; background-color: #c0392b;" onclick="startNationalMatch()">🌍 Матч Сборных</button>
+        <button onclick="saveCareer()" style="background-color: #3498db;">💾 Сохранить карьеру</button>
+        <button onclick="nextTour()" style="background-color: #e67e22;">⏩ Играть тур чемпионата</button>
+    </div>
+
+    <div id="table-screen" class="screen">
+        <h2>Таблица чемпионата</h2>
+        <div class="card" style="cursor: default;">
+            <table class="table-box" id="league-table-el">
+                <tr>
+                    <th>Клуб</th>
+                    <th>И</th>
+                    <th>О</th>
+                </tr>
+            </table>
+        </div>
+        <button onclick="showScreen('hub-screen')">Назад в хаб</button>
+    </div>
+
+    <div id="match-screen" class="screen">
+        <h2 id="match-title-header">Матч ⚽</h2>
+        <div class="card" style="cursor: default;">
+            <p id="match-score-board" style="font-weight: bold; text-align: center; font-size: 18px; color: #f1c40f;">Счет: 0 : 0</p>
+            <div class="match-field" id="match-event-text">
+                Матч начался...
+            </div>
+            <div id="match-actions"></div>
+        </div>
+    </div>
+
+    <script>
+        let player = {
+            name: "",
+            country: "",
+            position: "",
+            club: "",
+            rating: 65,
+            tour: 1,
+            season: 1,
+            euroCup: "Нет"
+        };
+
+        let trophies = [];
+
+        let leaguesData = {
+            "Premier League": [
+                { name: "Manchester City", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/Manchester_City_FC_badge.svg/150px-Manchester_City_FC_badge.svg.png" },
+                { name: "Arsenal", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/150px-Arsenal_FC.svg.png" },
+                { name: "Liverpool", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/Liverpool_FC.svg/150px-Liverpool_FC.svg.png" },
+                { name: "Chelsea", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/150px-Chelsea_FC.svg.png" },
+                { name: "Manchester United", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/150px-Manchester_United_FC_crest.svg.png" },
+                { name: "Tottenham", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/b/b4/Tottenham_Hotspur.svg/150px-Tottenham_Hotspur.svg.png" },
+                { name: "Newcastle", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Newcastle_United_Logo.svg/150px-Newcastle_United_Logo.svg.png" },
+                { name: "Aston Villa", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/9/9f/Aston_Villa_FC_crest_%282023%29.svg/150px-Aston_Villa_FC_crest_%282023%29.svg.png" },
+                { name: "West Ham", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c2/West_Ham_United_FC_logo.svg/150px-West_Ham_United_FC_logo.svg.png" },
+                { name: "Brighton", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/fd/Brighton_%26_Hove_Albion_logo.svg/150px-Brighton_%26_Hove_Albion_logo.svg.png" },
+                { name: "Crystal Palace", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/Crystal_Palace_FC_logo_%282022%29.svg/150px-Crystal_Palace_FC_logo_%282022%29.svg.png" },
+                { name: "Fulham", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/Fulham_FC_%28shield%29.svg/150px-Fulham_FC_%28shield%29.svg.png" },
+                { name: "Brentford", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/2a/Brentford_FC_crest.svg/150px-Brentford_FC_crest.svg.png" },
+                { name: "Everton", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7c/Everton_FC_logo.svg/150px-Everton_FC_logo.svg.png" },
+                { name: "Bournemouth", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/e5/AFC_Bournemouth_%282013%29.svg/150px-AFC_Bournemouth_%282013%29.svg.png" },
+                { name: "Wolves", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/fc/Wolverhampton_Wanderers_FC_logo.svg/150px-Wolverhampton_Wanderers_FC_logo.svg.png" },
+                { name: "Nottingham Forest", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/e5/Nottingham_Forest_F.C._logo.svg/150px-Nottingham_Forest_F.C._logo.svg.png" },
+                { name: "Leicester City", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/2d/Leicester_City_crest.svg/150px-Leicester_City_crest.svg.png" },
+                { name: "Ipswich Town", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Ipswich_Town_%282024%29.svg/150px-Ipswich_Town_%282024%29.svg.png" },
+                { name: "Southampton", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c9/Southampton_FC_crest.svg/150px-Southampton_FC_crest.svg.png" }
+            ],
+            "La Liga": [
+                { name: "Real Madrid", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/150px-Real_Madrid_CF.svg.png" },
+                { name: "Barcelona", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/150px-FC_Barcelona_%28crest%29.svg.png" },
+                { name: "Atletico Madrid", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f4/Atletico_Madrid_2024_logo.svg/150px-Atletico_Madrid_2024_logo.svg.png" },
+                { name: "Real Sociedad", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f1/Real_Sociedad_logo.svg/150px-Real_Sociedad_logo.svg.png" },
+                { name: "Villarreal", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/7/70/Villarreal_CF_logo.svg/150px-Villarreal_CF_logo.svg.png" },
+                { name: "Athletic Bilbao", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/9/98/Athletic_Bilbao_logo.svg/150px-Athletic_Bilbao_logo.svg.png" },
+                { name: "Real Betis", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/1/13/Real_Betis_Balompi%C3%A9_%28logo%29.svg/150px-Real_Betis_Balompi%C3%A9_%28logo%29.svg.png" },
+                { name: "Getafe", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/ee/Getafe_logo.svg/150px-Getafe_logo.svg.png" },
+                { name: "Valencia", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/c/ce/Valenciacf.svg/150px-Valenciacf.svg.png" },
+                { name: "Sevilla", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/Sevilla_FC_logo.svg/150px-Sevilla_FC_logo.svg.png" },
+                { name: "Celta Vigo", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/1/12/RC_Celta_de_Vigo_logo.svg/150px-RC_Celta_de_Vigo_logo.svg.png" },
+                { name: "Osasuna", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/d/db/CA_Osasuna_badge.svg/150px-CA_Osasuna_badge.svg.png" },
+                { name: "Girona", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/9/90/Girona_FC_Logo.svg/150px-Girona_FC_Logo.svg.png" },
+                { name: "Mallorca", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/e6/RCD_Mallorca_logo.svg/150px-RCD_Mallorca_logo.svg.png" },
+                { name: "Rayo Vallecano", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Rayo_Vallecano_logo.svg/150px-Rayo_Vallecano_logo.svg.png" },
+                { name: "Alaves", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/29/Deportivo_Alav%C3%A9s_logo_%282020%29.svg/150px-Deportivo_Alav%C3%A9s_logo_%282020%29.svg.png" },
+                { name: "Las Palmas", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d6/UD_Las_Palmas_logo.svg/150px-UD_Las_Palmas_logo.svg.png" },
+                { name: "Leganes", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/9/98/CD_Legan%C3%A9s_logo.svg/150px-CD_Legan%C3%A9s_logo.svg.png" },
+                { name: "Valladolid", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/6/67/Real_Valladolid_Logo_2024.svg/150px-Real_Valladolid_Logo_2024.svg.png" },
+                { name: "Espanyol", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d8/RCD_Espanyol_logo.svg/150px-RCD_Espanyol_logo.svg.png" }
+            ],
+            "Serie A": [
+                { name: "AC Milan", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d0/Logo_AC_Milan.svg/150px-Logo_AC_Milan.svg.png" },
+                { name: "Inter Milan", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/0/05/FC_Internazionale_Milano_2021.svg/150px-FC_Internazionale_Milano_2021.svg.png" },
+                { name: "Juventus", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/b/bc/Juventus_FC_2017_icon_%28black%29.svg/150px-Juventus_FC_2017_icon_%28black%29.svg.png" },
+                { name: "Napoli", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/28/SSC_Napoli_Logo.svg/150px-SSC_Napoli_Logo.svg.png" },
+                { name: "Roma", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f7/AS_Roma_logo_%282017%29.svg/150px-AS_Roma_logo_%282017%29.svg.png" },
+                { name: "Lazio", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/e1/SS_Lazio_badge.svg/150px-SS_Lazio_badge.svg.png" },
+                { name: "Atalanta", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/6/66/Atalanta_BC_Logo.svg/150px-Atalanta_BC_Logo.svg.png" },
+                { name: "Bologna", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/b/b3/Bologna_F.C._1909_logo.svg/150px-Bologna_F.C._1909_logo.svg.png" },
+                { name: "Fiorentina", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/ACF_Fiorentina_2022_logo.svg/150px-ACF_Fiorentina_2022_logo.svg.png" },
+                { name: "Torino", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Torino_FC_1906_logo.svg/150px-Torino_FC_1906_logo.svg.png" },
+                { name: "Monza", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5a/AC_Monza_logo_2021.svg/150px-AC_Monza_logo_2021.svg.png" },
+                { name: "Genoa", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/Genoa_C.F.C._logo_%282022%29.svg/150px-Genoa_C.F.C._logo_%282022%29.svg.png" },
+                { name: "Udinese", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/c/ce/Udinese_Calcio_logo.svg/150px-Udinese_Calcio_logo.svg.png" },
+                { name: "Verona", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/b/b5/Hellas_Verona_FC_logo_2020.svg/150px-Hellas_Verona_FC_logo_2020.svg.png" },
+                { name: "Lecce", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/e0/US_Lecce_Logo.svg/150px-US_Lecce_Logo.svg.png" },
+                { name: "Cagliari", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/1/12/Cagliari_Calcio_1920_Logo.svg/150px-Cagliari_Calcio_1920_Logo.svg.png" },
+                { name: "Empoli", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/Empoli_FC_Logo.svg/150px-Empoli_FC_Logo.svg.png" },
+                { name: "Parma", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6a/Parma_Calcio_1913_logo.svg/150px-Parma_Calcio_1913_logo.svg.png" },
+                { name: "Como", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/e9/Como_1907_Logo.svg/150px-Como_1907_Logo.svg.png" },
+                { name: "Venezia", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/en/thumb/1/17/Venezia_FC_logo_2022.svg/150px-Venezia_FC_logo_2022.svg.png" }
+            ],
+            "РПЛ": [
+                { name: "Zenit", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/1/18/FC_Zenit_Logo_2013.svg/150px-FC_Zenit_Logo_2013.svg.png" },
+                { name: "Spartak Moscow", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/9/93/FC_Spartak_Moscow_logo.svg/150px-FC_Spartak_Moscow_logo.svg.png" },
+                { name: "Dynamo Moscow", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/4/4b/FC_Dynamo_Moscow_logo.svg/150px-FC_Dynamo_Moscow_logo.svg.png" },
+                { name: "Krasnodar", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/6/6f/FC_Krasnodar_logo_2018.svg/150px-FC_Krasnodar_logo_2018.svg.png" },
+                { name: "CSKA Moscow", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/f/f6/PFC_CSKA_Moscow_logo_%282020%29.svg/150px-PFC_CSKA_Moscow_logo_%282020%29.svg.png" },
+                { name: "Lokomotiv Moscow", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/8/8d/FC_Lokomotiv_Moscow_logo_2022.svg/150px-FC_Lokomotiv_Moscow_logo_2022.svg.png" },
+                { name: "Rostov", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/9/95/FC_Rostov_logo_2018.svg/150px-FC_Rostov_logo_2018.svg.png" },
+                { name: "Rubin Kazan", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/e/e6/FC_Rubin_Kazan_logo_2023.svg/150px-FC_Rubin_Kazan_logo_2023.svg.png" },
+                { name: "Krylia Sovetov", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/4/4c/FC_Krylia_Sovetov_logo_2020.svg/150px-FC_Krylia_Sovetov_logo_2020.svg.png" },
+                { name: "Akhmat Grozny", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/9/91/FC_Akhmat_Grozny_logo.svg/150px-FC_Akhmat_Grozny_logo.svg.png" },
+                { name: "Pari Nizhny Novgorod", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/a/a2/FC_Pari_NN_logo.svg/150px-FC_Pari_NN_logo.svg.png" },
+                { name: "Fakel Voronezh", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/a/a8/FC_Fakel_Voronezh_logo.svg/150px-FC_Fakel_Voronezh_logo.svg.png" },
+                { name: "Orenburg", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/f/f6/FC_Orenburg_logo_2020.svg/150px-FC_Orenburg_logo_2020.svg.png" },
+                { name: "Baltika Kaliningrad", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/5/52/FC_Baltika_Kaliningrad_logo.svg/150px-FC_Baltika_Kaliningrad_logo.svg.png" },
+                { name: "Akron Togliatti", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/3/3b/FC_Akron_Tolyatti_logo.svg/150px-FC_Akron_Tolyatti_logo.svg.png" },
+                { name: "Dynamo Makhachkala", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/3/36/FC_Dynamo_Makhachkala_logo.svg/150px-FC_Dynamo_Makhachkala_logo.svg.png" }
+            ],
+            "Высшая лига": [
+                { name: "Dynamo Minsk", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/6/6b/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D1%84_%D0%A4%D0%9A_%D0%94%D0%B8%D0%BD%D0%B0%D0%BC%D0%BE_%D0%9C%D0%B8%D0%BD%D1%81%D0%BA_2022.png/150px-%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D1%84_%D0%A4%D0%9A_%D0%94%D0%B8%D0%BD%D0%B0%D0%BC%D0%BE_%D0%9C%D0%B8%D0%BD%D1%81%D0%BA_2022.png" },
+                { name: "BATE Borisov", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/e/e0/FC_BATE_Borisov_logo_2021.svg/150px-FC_BATE_Borisov_logo_2021.svg.png" },
+                { name: "Dynamo Brest", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/2/22/FC_Dynamo_Brest_logo.svg/150px-FC_Dynamo_Brest_logo.svg.png" },
+                { name: "Shakhter Soligorsk", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/8/8c/FC_Shakhter_Soligorsk_logo.svg/150px-FC_Shakhter_Soligorsk_logo.svg.png" },
+                { name: "Neman Grodno", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/8/84/FC_Neman_Grodno_logo.svg/150px-FC_Neman_Grodno_logo.svg.png" },
+                { name: "Torpedo-BelAZ", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/2/2a/FC_Torpedo-BelAZ_Zhodino_logo.svg/150px-FC_Torpedo-BelAZ_Zhodino_logo.svg.png" },
+                { name: "Slavia Mozyr", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/b/bf/FC_Slavia-Mozyr_logo.svg/150px-FC_Slavia-Mozyr_logo.svg.png" },
+                { name: "Gomel", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/9/91/FC_Gomel_logo.svg/150px-FC_Gomel_logo.svg.png" },
+                { name: "Isloch", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/7/7b/FC_Isloch_logo.svg/150px-FC_Isloch_logo.svg.png" },
+                { name: "Minsk", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/5/5e/FC_Minsk_logo.svg/150px-FC_Minsk_logo.svg.png" },
+                { name: "Vitebsk", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/d/d7/FC_Vitebsk_logo.svg/150px-FC_Vitebsk_logo.svg.png" },
+                { name: "Naftan Novopolotsk", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/1/18/FC_Naftan_logo.svg/150px-FC_Naftan_logo.svg.png" },
+                { name: "Slutsk", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/6/64/FC_Slutsk_logo.svg/150px-FC_Slutsk_logo.svg.png" },
+                { name: "Smorgon", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/3/36/FC_Smorgon_logo.svg/150px-Smorgon_logo.svg.png" },
+                { name: "Arsenal Dzerzhinsk", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/1/1a/FC_Arsenal_Dzerzhinsk_logo.svg/150px-FC_Arsenal_Dzerzhinsk_logo.svg.png" },
+                { name: "Dnepr Mogilev", points: 0, played: 0, logo: "https://upload.wikimedia.org/wikipedia/ru/thumb/4/44/FC_Dnepr_Mogilev_logo.svg/150px-FC_Dnepr_Mogilev_logo.svg.png" }
+            ]
+        };
+
+        let currentLeagueName = "РПЛ";
+        let matchType = "league";
+        let matchData = { myGoals: 0, enemyGoals: 0, opponentName: "", opponentObj: null, currentMomentIndex: 0, momentsList: [] };
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'table-screen') updateTableUI();
+            if(id === 'trophy-screen') updateTrophyUI();
+        }
+
+        function setTheme(main, hover) {
+            document.documentElement.style.setProperty('--accent-color', main);
+            document.documentElement.style.setProperty('--accent-hover', hover);
+        }
+
+        function changeLanguage() {
+            const lang = document.getElementById('lang-select').value;
+            if (lang === 'en') {
+                document.getElementById('t-subtitle').innerText = "Global football career: interactive attack & defense matches.";
+                document.getElementById('t-new-career').innerText = "➕ NEW CAREER";
+                document.getElementById('t-new-desc').innerText = "Create a player from around the world";
+            } else {
+                document.getElementById('t-subtitle').innerText = "Глобальная карьера футболиста: матчи с интерактивными атаками и защитой.";
+                document.getElementById('t-new-career').innerText = "➕ НОВАЯ КАРИЬЕРА";
+                document.getElementById('t-new-desc').innerText = "Создай игрока со всего мира";
+            }
+        }
+
+        function saveCareer() {
+            let saveData = { player, trophies, leaguesData, currentLeagueName };
+            localStorage.setItem('careerPitchSave', JSON.stringify(saveData));
+            alert("Карьера успешно сохранена!");
+        }
+
+        function loadCareer() {
+            let saved = localStorage.getItem('careerPitchSave');
+            if(!saved) { alert("Сохранений не найдено!"); return; }
+            let data = JSON.parse(saved);
+            player = data.player;
+            trophies = data.trophies || [];
+            leaguesData = data.leaguesData;
+            currentLeagueName = data.currentLeagueName;
+            updateHubUI();
+            showScreen('hub-screen');
+        }
+
+        function goToOffers() {
+            const name = document.getElementById('p-name').value;
+            if(!name.trim()) { alert("Введите имя!"); return; }
+            player.name = name;
+            player.country = document.getElementById('p-country').value;
+            player.position = document.getElementById('p-pos').value;
+            generateRandomOffers();
+            showScreen('offers-screen');
+        }
+
+        function generateRandomOffers() {
+            const container = document.getElementById('offers-container');
+            container.innerHTML = "";
+            let allLeagueNames = Object.keys(leaguesData);
+            let pool = [];
+
+            allLeagueNames.forEach(lName => {
+                let teams = leaguesData[lName];
+                let shuffledTeams = [...teams].sort(() => 0.5 - Math.random());
+                pool.push({ league: lName, team: shuffledTeams[0] });
+                pool.push({ league: lName, team: shuffledTeams[1] });
+            });
+
+            pool.sort(() => 0.5 - Math.random());
+            let selectedOffers = pool.slice(0, 3);
+
+            selectedOffers.forEach(item => {
+                let salaryVal = item.league === "РПЛ" ? "₽500 000" : (item.league === "Высшая лига" ? "€3 000" : "€10 000");
+                container.innerHTML += `
+                    <div class="offer-card">
+                        <div class="club-header">
+                            <img src="${item.team.logo}" class="club-logo-img">
+                            <div><h3 style="margin:0;">${item.team.name}</h3><span style="font-size:11px; background:var(--accent-color); padding: 2px 6px; border-radius: 4px;">${item.league}</span></div>
+                        </div>
+                        <p style="margin:8px 0 10px 0; font-size:13px;">Зарплата: ${salaryVal} / нед</p>
+                        <div class="signature-box" onclick="signContract('${item.team.name}', '${item.league}')">Подписать контракт</div>
+                    </div>`;
+            });
+        }
+
+        function signContract(clubName, leagueName) {
+            player.club = clubName;
+            currentLeagueName = leagueName;
+            updateHubUI();
+            showScreen('hub-screen');
+        }
+
+        function updateHubUI() {
+            document.getElementById('h-season').innerText = player.season;
+            document.getElementById('h-day').innerText = player.tour;
+            document.getElementById('h-name').innerText = player.name + " (" + player.position + ")";
+            document.getElementById('h-club').innerText = player.club;
+            document.getElementById('h-rating').innerText = player.rating;
+            document.getElementById('h-euro').innerText = player.euroCup;
+            document.getElementById('hub-club-title').innerText = player.club;
+
+            if (player.rating >= 76) {
+                document.getElementById('national-team-banner').style.display = 'block';
+                document.getElementById('nat-btn').style.display = 'block';
+            } else {
+                document.getElementById('national-team-banner').style.display = 'none';
+                document.getElementById('nat-btn').style.display = 'none';
+            }
+
+            if (player.euroCup !== "Нет") {
+                document.getElementById('euro-btn').style.display = 'block';
+            }
+        }
+
+        function updateTableUI() {
+            let tableEl = document.getElementById('league-table-el');
+            let teams = leaguesData[currentLeagueName];
+            teams.sort((a,b) => b.points - a.points);
+            let html = `<tr><th>Клуб</th><th>И</th><th>О</th></tr>`;
+            teams.forEach(t => {
+                let bold = t.name === player.club ? "color: var(--accent-color); font-weight:bold;" : "";
+                html += `<tr style="${bold}"><td>${t.name}</td><td>${t.played}</td><td>${t.points}</td></tr>`;
+            });
+            tableEl.innerHTML = html;
+        }
+
+        function updateTrophyUI() {
+            let container = document.getElementById('trophy-container');
+            if(trophies.length === 0) {
+                container.innerHTML = `<p style="color: #888; text-align: center; margin: 10px 0;">Пока нет трофеев. Выигрывай лиги и еврокубки!</p>`;
+            } else {
+                let html = "";
+                trophies.forEach(tr => {
+                    html += `<div class="trophy-item">🏆 <div><b>${tr.title}</b><br><span style="font-size:11px; color:#aaa;">Сезон ${tr.season} (${tr.club})</span></div></div>`;
+                });
+                container.innerHTML = html;
+            }
+        }
+
+        function nextTour() {
+            matchType = "league";
+            startMatch("Матч чемпионата");
+        }
+
+        function startEuroMatch() {
+            matchType = "euro";
+            startMatch(`Еврокубок (${player.euroCup})`);
+        }
+
+        function startNationalMatch() {
+            matchType = "national";
+            startMatch("Матч сборных (" + player.country + ")");
+        }
+
+        function startMatch(title) {
+            matchData.myGoals = 0; matchData.enemyGoals = 0; matchData.currentMomentIndex = 0;
+            if(matchType === 'league') {
+                let opponents = leaguesData[currentLeagueName].filter(t => t.name !== player.club);
+                matchData.opponentObj = opponents[Math.floor(Math.random() * opponents.length)];
+                matchData.opponentName = matchData.opponentObj.name;
+            } else if(matchType === 'euro') {
+                matchData.opponentName = "Европейский Гранд";
+            } else {
+                matchData.opponentName = "Сборная соперника";
+            }
+
+            // Генерируем 3-5 атак для нас и 3-5 для соперника и перемешиваем
+            let totalMomentsCount = Math.floor(Math.random() * 3) + 3; // 3-5
+            matchData.momentsList = [];
+            for(let i=0; i<totalMomentsCount; i++) {
+                matchData.momentsList.push('attack');
+                matchData.momentsList.push('defense');
+            }
+            // Добавим рандомно пенальти или штрафной
+            if(Math.random() < 0.5) matchData.momentsList.push('penalty');
+            else matchData.momentsList.push('freekick');
+
+            matchData.momentsList.sort(() => 0.5 - Math.random());
+
+            document.getElementById('match-title-header').innerText = title + ": vs " + matchData.opponentName;
+            document.getElementById('match-score-board').innerText = `Счет: 0 : 0`;
+            showScreen('match-screen');
+            nextMoment();
+        }
+
+        function nextMoment() {
+            if(matchData.currentMomentIndex >= matchData.momentsList.length) {
+                endMatch();
+                return;
+            }
+
+            let type = matchData.momentsList[matchData.currentMomentIndex];
+            matchData.currentMomentIndex++;
+
+            if(type === 'attack') {
+                document.getElementById('match-event-text').innerText = "🔥 У вас опасный момент у чужих ворот! Что будете делать?";
+                let actionsEl = document.getElementById('match-actions');actionsEl.style.display = "block";
+                actionsEl.innerHTML = `
+                    <button onclick="resolveAttack('pass')">Отыграться в короткий пас</button>
+                    <button onclick="resolveAttack('shoot')">Мощный удар по воротам!</button>
+                    <button onclick="resolveAttack('dribble')" style="background-color: #e67e22;">Пойти в обводку</button>
+                `;
+            } else if(type === 'defense') {
+                document.getElementById('match-event-text').innerText = "🛡️ Соперник проводит острую атаку! Ваша задача защититься:";
+                let actionsEl = document.getElementById('match-actions');
+                actionsEl.style.display = "block";
+                actionsEl.innerHTML = `
+                    <button onclick="resolveDefense('tackle')" style="background-color: #c0392b;">Чистый подкат в ноги</button>
+                    <button onclick="resolveDefense('block')" style="background-color: #e67e22;">Заблокировать удар корпусом</button>
+                    <button onclick="resolveDefense('press')">Активный прессинг</button>
+                `;
+            } else if(type === 'penalty') {
+                document.getElementById('match-event-text').innerText = "⚽ НАЗНАЧЕН ПЕНАЛЬТИ! Выбери направление удара:";
+                let actionsEl = document.getElementById('match-actions');
+                actionsEl.style.display = "block";
+                actionsEl.innerHTML = `
+                    <div class="directions-grid">
+                        <button onclick="resolvePenalty('left')">↖️ Влево</button>
+                        <button onclick="resolvePenalty('center')">⬆️ По центру</button>
+                        <button onclick="resolvePenalty('right')">↗️ Вправо</button>
+                    </div>
+                `;
+            } else if(type === 'freekick') {
+                document.getElementById('match-event-text').innerText = "🎯 ШТРАФНОЙ УДАР! Выберите точку прицеливания:";
+                let actionsEl = document.getElementById('match-actions');
+                actionsEl.style.display = "block";
+                actionsEl.innerHTML = `
+                    <div class="directions-grid">
+                        <button onclick="resolveFreekick('top-left')">↖️ В девятку</button>
+                        <button onclick="resolveFreekick('bottom')">⬇️ Низом в угол</button>
+                        <button onclick="resolveFreekick('top-right')">↗️ В правую девятку</button>
+                    </div>
+                `;
+            }
+        }
+
+        function resolveAttack(action) {
+            let chance = (player.rating - 60) * 0.02 + 0.55;
+            if(Math.random() < chance) {
+                matchData.myGoals++;
+                document.getElementById('match-event-text').innerText = "⚽ ГОЛ! Прекрасное исполнение!";
+            } else {
+                document.getElementById('match-event-text').innerText = "❌ Защита соперника справилась, момент упущен.";
+            }
+            updateScoreBoard();
+            setTimeout(nextMoment, 1500);
+        }
+
+        function resolveDefense(action) {
+            let chance = (player.rating - 60) * 0.02 + 0.5;
+            if(Math.random() < chance) {
+                document.getElementById('match-event-text').innerText = "🛡️ Отличная игра в обороне! Ошибка соперника ликвидирована.";
+            } else {
+                matchData.enemyGoals++;
+                document.getElementById('match-event-text').innerText = "⚽ ГОЛ СОПЕРНИКА! Не удалось сдержать атаку.";
+            }
+            updateScoreBoard();
+            setTimeout(nextMoment, 1500);
+        }
+
+        function resolvePenalty(dir) {
+            let correctDir = ['left', 'center', 'right'][Math.floor(Math.random() * 3)];
+            if(dir === correctDir || Math.random() < (player.rating / 120)) {
+                matchData.myGoals++;
+                document.getElementById('match-event-text').innerText = "⚽ Хладнокровный пенальти! Вратарь угадал не тот угол (или удар был неберущимся)!";
+            } else {
+                document.getElementById('match-event-text').innerText = "❌ Вратарь соперника парировал удар с точки!";
+            }
+            updateScoreBoard();
+            setTimeout(nextMoment, 1500);
+        }
+
+        function resolveFreekick(dir) {
+            if(Math.random() < 0.6 + (player.rating - 65)*0.01) {
+                matchData.myGoals++;
+                document.getElementById('match-event-text').innerText = "🎯 ШЕДЕВР! Мяч летит точно в сетку со штрафного! ГОЛ!";
+            } else {
+                document.getElementById('match-event-text').innerText = "❌ Удар со штрафного пришелся выше перекладины.";
+            }
+            updateScoreBoard();
+            setTimeout(nextMoment, 1500);
+        }
+
+        function updateScoreBoard() {
+            document.getElementById('match-score-board').innerText = `Счет: ${matchData.myGoals} : ${matchData.enemyGoals}`;
+        }
+
+        function endMatch() {
+            document.getElementById('match-actions').style.display = "none";
+            document.getElementById('match-event-text').innerText = `🏁 Финальный свисток!\nИтоговый счет: ${matchData.myGoals} : ${matchData.enemyGoals}`;
+
+            if(matchType === 'league') {
+                let myTeam = leaguesData[currentLeagueName].find(t => t.name === player.club);
+                myTeam.played++; matchData.opponentObj.played++;
+                if(matchData.myGoals > matchData.enemyGoals) myTeam.points += 3;
+                else if(matchData.myGoals === matchData.enemyGoals) { myTeam.points++; matchData.opponentObj.points++; }
+                else matchData.opponentObj.points += 3;
+
+                player.tour++;
+                if(player.tour > 34) {
+                    let teams = leaguesData[currentLeagueName];
+                    teams.sort((a,b) => b.points - a.points);
+                    let rank = teams.findIndex(t => t.name === player.club) + 1;
+                    
+                    if(rank === 1) {
+                        player.euroCup = "Лига Чемпионов 🏆";
+                        trophies.push({ title: `Победитель ${currentLeagueName}`, season: player.season, club: player.club });
+                    } else if(rank <= 4) {
+                        player.euroCup = "Лига Европы";
+                    } else if(rank <= 6) {
+                        player.euroCup = "Лига Конференций";
+                    }
+
+                    // Автоматическое улучшение рейтинга по окончании сезона без фарма!
+                    player.rating += Math.floor(Math.random() * 3) + 2; // +2..+4 рейтинга за сезон
+
+                    alert(`Сезон окончен! Твое место: ${rank}.\n📈 Твой рейтинг вырос до: ${player.rating}`);
+                    player.season++; player.tour = 1;
+                }
+            } else if(matchType === 'euro' && matchData.myGoals > matchData.enemyGoals) {
+                trophies.push({ title: `Кубок (${player.euroCup})`, season: player.season, club: player.club });
+                alert("Поздравляем! Выигран международный трофей!");
+            }
+
+            setTimeout(() => { updateHubUI(); showScreen('hub-screen'); }, 3000);
+        }
+    </script>
+</body>
+</html>
+   
